@@ -1,0 +1,52 @@
+-- UNIT TESTS --
+(*
+adsf
+(**)
+asdf
+*) 
+not 45 and
+let a = 2
+
+-- simple let tests
+let a = "hello"
+let 
+rec 
+a = 'a'
+and a= '\''
+and a=1.677
+
+-- let id type = literal tests
+let rec a : int = (* wow *) (1.5e-9) 
+let a : int = -45 + 34
+let a : (int) =true
+and b : int = 1
+and c : (* sneaky comment *) ( unit ) = ()
+
+-- let mutable id type tests
+let mutable a : int
+and mutable b : char
+let mutable a : (int)
+and mutable a [ 2 ]
+and mutable b : (int)
+and c = 2 
+
+let rec a (b : int) c = 0
+and a b (c : bool) = 0
+
+-- let tests with complex expressions 
+let a = for i = 3 to 5 do 1 done
+let a = while true do 1 done
+let a = match 1 with a -> +5 | b -> 1.4 | +. 9.1 -> 8 end 
+
+-- type tests
+type struct1 = A of int
+type struct2 = B
+
+-- THE END --
+
+
+
+
+
+
+
