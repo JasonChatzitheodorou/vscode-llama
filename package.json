@@ -1,6 +1,7 @@
 {
     "name": "llama-language-support",
     "displayName": "Llama Language Support",
+    "publisher": "JasonChatzitheodorou",
     "description": "",
     "version": "0.0.1",
     "engines": {
@@ -21,5 +22,9 @@
             "scopeName": "source.lla",
             "path": "./syntaxes/llama.tmLanguage.json"
         }]
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/JasonChatzitheodorou/vscode-llama.git"
     }
 }
