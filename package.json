@@ -2,7 +2,7 @@
     "name": "llama-language-support",
     "displayName": "Llama Language Support",
     "publisher": "JasonChatzitheodorou",
-    "icon": "https://clipart.world/wp-content/uploads/2020/08/llama-icon-png-transparent.png",
+    "icon": "icons/icons8-llama-64.png",
     "description": "",
     "version": "0.0.2",
     "engines": {
