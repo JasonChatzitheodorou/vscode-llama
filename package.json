@@ -4,7 +4,7 @@
     "publisher": "JasonChatzitheodorou",
     "icon": "https://clipart.world/wp-content/uploads/2020/08/llama-icon-png-transparent.png",
     "description": "",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "engines": {
         "vscode": "^1.67.0"
     },
@@ -12,17 +12,26 @@
         "Programming Languages"
     ],
     "contributes": {
-        "languages": [{
-            "id": "llama",
-            "aliases": ["Llama", "llama"],
-            "extensions": [".lla"],
-            "configuration": "./language-configuration.json"
-        }],
-        "grammars": [{
-            "language": "llama",
-            "scopeName": "source.lla",
-            "path": "./syntaxes/llama.tmLanguage.json"
-        }]
+        "languages": [
+            {
+                "id": "llama",
+                "aliases": [
+                    "Llama",
+                    "llama"
+                ],
+                "extensions": [
+                    ".lla"
+                ],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "llama",
+                "scopeName": "source.lla",
+                "path": "./syntaxes/llama.tmLanguage.json"
+            }
+        ]
     },
     "repository": {
         "type": "git",
