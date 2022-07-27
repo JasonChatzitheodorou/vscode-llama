@@ -3,8 +3,7 @@
 	"name": "Llama",
 	"patterns": 
 	[
-		{"include": "#program"},
-		{"include": "#expr"}
+		{"include": "#program"}
 	],
 	"repository": {
 		"testrule": 
@@ -63,7 +62,7 @@
 			"comment": "Lookahead with ?= so that we hopefully stop at next definition",
 			"begin": "let", 
 			"beginCaptures": { "0": { "name": "keyword.control.let.llama" } }, 
-			"end": "(?=\\s*(let|type|in[^t]))",
+			"end": "(?=\\s*(let|type))",
 			"contentName": "letdef.llama",
 			"patterns": [
 				{
@@ -124,6 +123,12 @@
 							"include": "#defnorec" 
 						}
 					]
+				},
+				{
+					"begin": "(?<=\\s*)in",
+					"beginCaptures": {"0": {"name": "keyword.control.in.llama"}},
+					"end": "(?=\\s*(let|type))",
+					"patterns": [{"#include": "#expr"}]
 				}
 			]
 		},
@@ -686,9 +691,9 @@
 					"name": "keyword.operator.llama",
 					"match": "(new|delete)"
 				},
-				{"include": "#type"},
 				{"include": "#idlowervar"},
-				{"include": "#idupper"}
+				{"include": "#idupper"},
+				{"include": "#type"}
 			]
 		},
 		"idlowervar": 

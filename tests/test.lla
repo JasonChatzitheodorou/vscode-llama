@@ -5,7 +5,7 @@ adsf
 asdf
 *) 
 not 45 and
-let a = 2
+let a = 1
 
 -- simple let tests
 let a = "hello"
@@ -37,11 +37,15 @@ and a b (c : bool) = 0
 let a = for i = 3 to 5 do 1 done
 let a = while true do 1 done
 let a = match 1 with a -> +5 | b -> 1.4 | +. 9.1 -> 8 end 
+let a = let x = 5 in x  
+
 
 -- type tests
 type struct1 = A of int
 type struct2 = B
 
+let a = x
+let a = let x = 1 in x + 2
 -- THE END --
 
 
