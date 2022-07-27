@@ -3,7 +3,8 @@
 	"name": "Llama",
 	"patterns": 
 	[
-		{"include": "#program"}
+		{"include": "#program"},
+		{"include": "#expr"}
 	],
 	"repository": {
 		"trash": 
@@ -54,70 +55,16 @@
 		},
 		"letdef": 
 		{
-			"comment": "Lookahead with ?= so that we hopefully stop at next definition",
-			"begin": "let", 
-			"beginCaptures": { "0": { "name": "keyword.control.let.llama" } }, 
-			"end": "(?=\\s*(let|type))",
-			"contentName": "letdef.llama",
+			"begin": "\\b(let)\\b",
+			"beginCaptures": {"0": {"name": "keyword.control.let.llama"}},
+			"end": "(?=\\s*(let|type|in[^t]))",
 			"patterns": [
 				{
-					"include": "#comments"
+					"name": "keyword.control.andrec.llama",
+					"match": "\\b(and|rec)\\b"
 				},
 				{
-					"comment": "First def, rec can only be here",
-					"begin": "(?<=let\\s+)",
-					"end": "(?=\\s*(let|type|in[^t]|and))",
-					"contentName": "first.def.llama",
-					"patterns": [
-						{
-							"include": "#comments"
-						},
-						{
-							"comment": "If rec was found we are definitely here",
-							"begin": "(?=rec)",
-							"end": "(?=\\s*(let|type|in[^t]|and))",
-							"name": "rec.found.llama",
-							"patterns": [
-								{
-									"include": "#comments"
-								},
-								{
-									"name": "keyword.control.rec.llama",
-									"match": "rec"
-								},
-								{
-									"include": "#defrec"
-								}
-							]
-						},
-						{
-							"comment": "if rec wasn't found we are definitely here",
-							"begin": "(?=[a-z])",
-							"end": "(?=\\s*(let|type|in[^t]|and))",
-							"patterns": [
-								{
-									"include": "#comments"
-								},
-								{
-									"include": "#defnorec"
-								}
-							]
-						}
-					]
-				},
-				{
-					"comment": "Continued letdef",
-					"begin": "and",
-					"beginCaptures": {"0": {"name": "letdef.and.llama"}},
-					"end": "(?=\\s*(let|type|in[^t]|and))",
-					"patterns": [
-						{
-							"include": "#comments"
-						},
-						{
-							"include": "#defnorec" 
-						}
-					]
+					"include": "#def"
 				}
 			]
 		},
@@ -136,7 +83,7 @@
 				}
 			]
 		},
-		"defrec": 
+		"def": 
 		{
 			"patterns": [
 				{
@@ -145,8 +92,8 @@
 				{
 					"begin": "mutable",
 					"beginCaptures": { "0": { "name": "keyword.control.mutable.llama" } },
-					"end": "(?=\\s*(and|let|type|in[^t])\\s*)",
-					"contentName": "defrec.llama",
+					"end": "(?=\\s*(and|let|type|in[^t]))",
+					"contentName": "def.mutable.llama",
 					"patterns": [
 						{
 							"include": "#comments"
@@ -159,142 +106,7 @@
 									"include": "#comments"
 								},
 								{
-									"include": "#idlowervar"
-								}
-							]
-						},
-						{
-							"begin": "(?=\\s*\\[)",
-							"end": "(?=\\s*(:|and|let|type|in[^t]))",
-							"patterns": [
-								{
-									"include": "#comments"
-								},
-								{
-									"name": "left.bracket.llama",
-									"match": "\\["
-								},
-								{
-									"name": "left.bracket.llama",
-									"match": "\\["
-								}, 
-								{
-									"include": "#expr"
-								}
-							]
-						},
-						{
-							"begin": "(?=\\s*:)",
-							"end": "(?=\\s*(and|let|type|in[^t]))",
-							"patterns": [
-								{
-									"include": "#comments"
-								},
-								{
-									"name": "colon.llama",
-									"match": ":"
-								},
-								{
-									"include": "#type"
-								}
-							]
-						}
-					]
-				},
-				{
-					"begin": "(?<=rec\\s+)",
-					"end": "(?=\\s*(and|let|type|in[^t]))",
-					"contentName": "defrec.llama",
-					"patterns": [
-						{
-							"include": "#comments"
-						},
-						{
-							"begin": "(?<=rec\\s+)",
-							"end": "(?=\\s*\\=)",
-							"contentName": "leftside.llama",
-							"patterns": [
-								{
-									"include": "#comments"
-								},
-								{
-									"comment": "Ensure that this captures only the first id of each def",
-									"begin": "(?<=rec\\s+)",
-									"end": "[a-z][^\\s|:|=]*",
-									"endCaptures": {"0": {"patterns": [{"include": "#idlowervar"}]}}
-								},
-								{
-									"begin": "(?<=([a-zA-Z0-9]|_)\\s+)",
-									"end": "(?=\\s*(:|\\=))",
-									"patterns": [
-										{
-											"include": "#comments"
-										},
-										{
-											"include": "#par"
-										}
-									]
-								},
-								{
-									"begin": "(?=\\s*:)",
-									"end": "(?=\\s*=)",
-									"patterns": [
-										{
-											"include": "#comments"
-										},
-										{
-											"name": "colon.llama",
-											"match": ":"
-										},
-										{
-											"include": "#type"
-										}
-									]
-								}
-							]
-						},
-						{
-							"begin": "=(?=\\s*)",
-							"beginCaptures": {"0": {"name": "equal.llama"}},
-							"end": "(?=\\s*(and|let|type|in[^t]))",
-							"contentName": "rightside.llama",
-							"patterns": [
-								{
-									"include": "#comments"
-								},
-								{
-									"include": "#expr"
-								}
-							]
-						}
-					]
-				}
-			]
-		},
-		"defnorec": 
-		{
-			"patterns": [
-				{
-					"include": "#comments"
-				},
-				{
-					"begin": "mutable",
-					"beginCaptures": { "0": { "name": "keyword.control.mutable.llama" } },
-					"end": "(?=\\s*(and|let|type|in[^t]))",
-					"contentName": "defnorec.llama",
-					"patterns": [
-						{
-							"include": "#comments"
-						},
-						{
-							"begin": "(?=\\s*[a-z])",
-							"end": "(?=\\s*(\\[|:|and|let|type|in[^t]))",
-							"patterns": [
-								{
-									"include": "#comments"
-								},
-								{
-									"include": "#idlowervar"
+									"include": "#idlowerdef"
 								}
 							]
 						},
@@ -338,15 +150,15 @@
 					]
 				},
 				{
-					"begin": "(?<=(and|let)\\s+)",
+					"begin": "(?<=(and|let|rec)\\s+)",
 					"end": "(?=\\s*(and|let|type|in[^t]))",
-					"contentName": "defnorec.llama",
+					"contentName": "def.constant.llama",
 					"patterns": [
 						{
 							"include": "#comments"
 						},
 						{
-							"begin": "(?<=(and|let)\\s+)",
+							"begin": "(?<=(and|let|rec)\\s+)",
 							"end": "(?=\\s*\\=)",
 							"contentName": "leftside.llama",
 							"patterns": [
@@ -355,9 +167,9 @@
 								},
 								{
 									"comment": "Ensure that this captures only the first id of each def",
-									"begin": "(?<=(and|let)\\s+)",
+									"begin": "(?<=(and|let|rec)\\s+)",
 									"end": "[a-z][^\\s|:|=]*",
-									"endCaptures": {"0": {"patterns": [{"include": "#idlowervar"}]}}
+									"endCaptures": {"0": {"patterns": [{"include": "#idlowerdef"}]}}
 								},
 								{
 									"begin": "(?<=([a-zA-Z0-9]|_)\\s+)",
@@ -575,7 +387,11 @@
 		{
 			"patterns": [
 				{"include": "#comments"},
-				{"include": "#letin"},
+				{"include": "#letdef"},
+				{
+					"name": "keyword.control.expr.llama",
+					"match": "\\b(if|then|else|in)\\b"
+				},	
 				{"include": "#literal"},
 				{
 					"comment": "( expr )",
@@ -686,79 +502,12 @@
 				{"include": "#type"}
 			]
 		},
-		"letin": 
+		"idlowerdef": 
 		{
-			"comment": "Lookahead with ?= so that we hopefully stop at next definition",
-			"begin": "let", 
-			"beginCaptures": { "0": { "name": "keyword.control.let.llama" } }, 
-			"end": "(?=\\s*(and|let|type|in[^t]|end|then|else|do|done|to|downto|with|true|false|dim|new|delete|begin|if|while|for|match|\\,|\\]|\\)|\\(|\\||(\\+|\\-|\\+\\.|\\-\\.|\\!|not)|(((\\+|\\-|\\*|\\/)(\\.)?)|mod|\\*\\*|\\=|\\<\\>|\\<|\\>|\\<\\=|\\>\\=|\\=\\=|\\!\\=|\\&\\&|\\|\\||\\;|\\:\\=)|([a-z]([a-zA-Z0-9]|\\_)*)|([A-Z]([a-zA-Z0-9]|\\_)*)|(?<!\\.)[0-9]+(?=\\s+)|[0-9]+\\.[0-9]+(e[\\+\\-]?[0-9]+)?|\\'([^'\"\\\\\\n\\r\\0]|(\\\\([ntr0\\'\"]|(x{[0-9a-f]}{[0-9a-f]}))))\\'|\"((.|[^\"\\n])?)*\"|true|false|\\(\\)))",
-			"contentName": "letin.llama",
 			"patterns": [
 				{
-					"include": "#comments"
-				},
-				{
-					"comment": "First def, rec can only be here",
-					"begin": "(?<=let\\s+)",
-					"end": "(?=\\s*(let|type|in[^t]|and))",
-					"contentName": "first.def.llama",
-					"patterns": [
-						{
-							"include": "#comments"
-						},
-						{
-							"comment": "If rec was found we are definitely here",
-							"begin": "(?=rec)",
-							"end": "(?=\\s*(let|type|in[^t]|and))",
-							"name": "rec.found.llama",
-							"patterns": [
-								{
-									"include": "#comments"
-								},
-								{
-									"name": "keyword.control.rec.llama",
-									"match": "rec"
-								},
-								{
-									"include": "#defrec"
-								}
-							]
-						},
-						{
-							"comment": "if rec wasn't found we are definitely here",
-							"begin": "(?=[a-z])",
-							"end": "(?=\\s*(let|type|in[^t]|and))",
-							"patterns": [
-								{
-									"include": "#comments"
-								},
-								{
-									"include": "#defnorec"
-								}
-							]
-						}
-					]
-				},
-				{
-					"comment": "Continued letdef",
-					"begin": "and",
-					"beginCaptures": {"0": {"name": "letdef.and.llama"}},
-					"end": "(?=\\s*(let|type|in[^t]|and))",
-					"patterns": [
-						{
-							"include": "#comments"
-						},
-						{
-							"include": "#defnorec" 
-						}
-					]
-				},
-				{
-					"begin": "(?<=\\s*)in",
-					"beginCaptures": {"0": {"name": "keyword.control.in.llama"}},
-					"end": "(?=\\s*(and|let|type|in[^t]|end|then|else|do|done|to|downto|with|true|false|dim|new|delete|begin|if|while|for|match|\\,|\\]|\\)|\\(|\\||(\\+|\\-|\\+\\.|\\-\\.|\\!|not)|(((\\+|\\-|\\*|\\/)(\\.)?)|mod|\\*\\*|\\=|\\<\\>|\\<|\\>|\\<\\=|\\>\\=|\\=\\=|\\!\\=|\\&\\&|\\|\\||\\;|\\:\\=)|([a-z]([a-zA-Z0-9]|\\_)*)|([A-Z]([a-zA-Z0-9]|\\_)*)|(?<!\\.)[0-9]+(?=\\s+)|[0-9]+\\.[0-9]+(e[\\+\\-]?[0-9]+)?|\\'([^'\"\\\\\\n\\r\\0]|(\\\\([ntr0\\'\"]|(x{[0-9a-f]}{[0-9a-f]}))))\\'|\"((.|[^\"\\n])?)*\"|true|false|\\(\\)))",
-					"contentName": "expr.after.in",
-					"patterns": [{"#include": "#expr"}]
+					"name": "entity.name.function.llama",
+					"match": "[a-z]([A-Za-z]|[0-9]|_)*"
 				}
 			]
 		},
@@ -797,11 +546,21 @@
 		},
 		"binop": 
 		{
-			"patterns": [{"match": "((\\+|\\-|\\*|\\/)(\\.)?)|mod|\\*\\*|\\=|\\<\\>|\\<|\\>|\\<\\=|\\>\\=|\\=\\=|\\!\\=|\\&\\&|\\|\\||\\;|\\:\\="}]
+			"patterns": [
+				{
+					"name": "binop.llama", 
+					"match": "((\\+|\\-|\\*|\\/)(\\.)?)|mod|\\*\\*|\\=|\\<\\>|\\<|\\>|\\<\\=|\\>\\=|\\=\\=|\\!\\=|\\&\\&|\\|\\||\\;|\\:\\="
+				}
+				]
 		},
 		"unop": 
 		{
-			"patterns": [{"name": "unop.llama", "match": "\\+|\\-|\\+\\.|\\-\\.|\\!|not"}]
+			"patterns": [
+				{
+					"name": "unop.llama", 
+					"match": "\\+|\\-|\\+\\.|\\-\\.|\\!|not"
+				}
+			]
 		},
 		"literal": 
 		{
