@@ -60,8 +60,8 @@
 			"end": "(?=\\s*(let|type|in[^t]))",
 			"patterns": [
 				{
-					"name": "keyword.control.andrec.llama",
-					"match": "\\b(and|rec)\\b"
+					"name": "keyword.control.rec.llama",
+					"match": "\\b(rec)\\b"
 				},
 				{
 					"include": "#def"
