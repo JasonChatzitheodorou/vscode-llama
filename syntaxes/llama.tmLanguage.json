@@ -3,23 +3,19 @@
 	"name": "Llama",
 	"patterns": 
 	[
-		{"include": "#program"}
+		{"include": "#program"},
+		{"include": "#trash"}
 	],
 	"repository": {
-		"testrule": 
+		"trash": 
 		{
-			"name": "testrule.llama",
-			"begin": "start",
-			"end": "(?<=rec([^a][^n][^d])*)",
+			"name": "trash.llama",
+			"begin": "\\b(trash)\\b",
+			"end": "$",
 			"patterns": [
 				{
-					"name": "keyword.control.rec.llama",
-					"match": "rec"
-				},
-				{
-					"begin": "(?<=rec\\s*)",
-					"end": "(?=\\s*and)",
-					"patterns": [{"include": "#idlowervar"}]
+					"name": "trash.lost",
+					"match": "\\b(end)\\b"
 				}
 			]
 		},
@@ -123,12 +119,6 @@
 							"include": "#defnorec" 
 						}
 					]
-				},
-				{
-					"begin": "(?<=\\s*)in",
-					"beginCaptures": {"0": {"name": "keyword.control.in.llama"}},
-					"end": "(?=\\s*(let|type))",
-					"patterns": [{"#include": "#expr"}]
 				}
 			]
 		},
@@ -586,6 +576,7 @@
 		{
 			"patterns": [
 				{"include": "#comments"},
+				{"include": "#letin"},
 				{"include": "#literal"},
 				{
 					"comment": "( expr )",
@@ -694,6 +685,82 @@
 				{"include": "#idlowervar"},
 				{"include": "#idupper"},
 				{"include": "#type"}
+			]
+		},
+		"letin": 
+		{
+			"comment": "Lookahead with ?= so that we hopefully stop at next definition",
+			"begin": "let", 
+			"beginCaptures": { "0": { "name": "keyword.control.let.llama" } }, 
+			"end": "(?=\\s*(and|let|type|in[^t]|end|then|else|do|done|to|downto|with|true|false|dim|new|delete|begin|if|while|for|match|\\,|\\]|\\)|\\(|\\||(\\+|\\-|\\+\\.|\\-\\.|\\!|not)|(((\\+|\\-|\\*|\\/)(\\.)?)|mod|\\*\\*|\\=|\\<\\>|\\<|\\>|\\<\\=|\\>\\=|\\=\\=|\\!\\=|\\&\\&|\\|\\||\\;|\\:\\=)|([a-z]([a-zA-Z0-9]|\\_)*)|([A-Z]([a-zA-Z0-9]|\\_)*)|(?<!\\.)[0-9]+(?=\\s+)|[0-9]+\\.[0-9]+(e[\\+\\-]?[0-9]+)?|\\'([^'\"\\\\\\n\\r\\0]|(\\\\([ntr0\\'\"]|(x{[0-9a-f]}{[0-9a-f]}))))\\'|\"((.|[^\"\\n])?)*\"|true|false|\\(\\)))",
+			"contentName": "letin.llama",
+			"patterns": [
+				{
+					"include": "#comments"
+				},
+				{
+					"comment": "First def, rec can only be here",
+					"begin": "(?<=let\\s+)",
+					"end": "(?=\\s*(let|type|in[^t]|and))",
+					"contentName": "first.def.llama",
+					"patterns": [
+						{
+							"include": "#comments"
+						},
+						{
+							"comment": "If rec was found we are definitely here",
+							"begin": "(?=rec)",
+							"end": "(?=\\s*(let|type|in[^t]|and))",
+							"name": "rec.found.llama",
+							"patterns": [
+								{
+									"include": "#comments"
+								},
+								{
+									"name": "keyword.control.rec.llama",
+									"match": "rec"
+								},
+								{
+									"include": "#defrec"
+								}
+							]
+						},
+						{
+							"comment": "if rec wasn't found we are definitely here",
+							"begin": "(?=[a-z])",
+							"end": "(?=\\s*(let|type|in[^t]|and))",
+							"patterns": [
+								{
+									"include": "#comments"
+								},
+								{
+									"include": "#defnorec"
+								}
+							]
+						}
+					]
+				},
+				{
+					"comment": "Continued letdef",
+					"begin": "and",
+					"beginCaptures": {"0": {"name": "letdef.and.llama"}},
+					"end": "(?=\\s*(let|type|in[^t]|and))",
+					"patterns": [
+						{
+							"include": "#comments"
+						},
+						{
+							"include": "#defnorec" 
+						}
+					]
+				},
+				{
+					"begin": "(?<=\\s*)in",
+					"beginCaptures": {"0": {"name": "keyword.control.in.llama"}},
+					"end": "(?=\\s*(and|let|type|in[^t]|end|then|else|do|done|to|downto|with|true|false|dim|new|delete|begin|if|while|for|match|\\,|\\]|\\)|\\(|\\||(\\+|\\-|\\+\\.|\\-\\.|\\!|not)|(((\\+|\\-|\\*|\\/)(\\.)?)|mod|\\*\\*|\\=|\\<\\>|\\<|\\>|\\<\\=|\\>\\=|\\=\\=|\\!\\=|\\&\\&|\\|\\||\\;|\\:\\=)|([a-z]([a-zA-Z0-9]|\\_)*)|([A-Z]([a-zA-Z0-9]|\\_)*)|(?<!\\.)[0-9]+(?=\\s+)|[0-9]+\\.[0-9]+(e[\\+\\-]?[0-9]+)?|\\'([^'\"\\\\\\n\\r\\0]|(\\\\([ntr0\\'\"]|(x{[0-9a-f]}{[0-9a-f]}))))\\'|\"((.|[^\"\\n])?)*\"|true|false|\\(\\)))",
+					"contentName": "expr.after.in",
+					"patterns": [{"#include": "#expr"}]
+				}
 			]
 		},
 		"idlowervar": 
