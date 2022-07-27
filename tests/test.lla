@@ -39,6 +39,16 @@ let a = while true do 1 done
 let a = match 1 with a -> +5 | b -> 1.4 | +. 9.1 -> 8 end 
 let a = let x = 5 in x  
 
+-- let tests with let in inside
+let a = x
+let a = (let x = 1 in x) + 3 
+let a = begin let x = 1 in x end
+let a = 
+    let x = 1 
+    in x + 3
+let x = 2 
+
+let x = if 1 = 1 then 3 else 4
 
 -- type tests
 type struct1 = A of int
