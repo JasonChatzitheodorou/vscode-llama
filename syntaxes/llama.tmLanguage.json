@@ -3,8 +3,7 @@
 	"name": "Llama",
 	"patterns": 
 	[
-		{"include": "#program"},
-		{"include": "#trash"}
+		{"include": "#program"}
 	],
 	"repository": {
 		"trash": 
