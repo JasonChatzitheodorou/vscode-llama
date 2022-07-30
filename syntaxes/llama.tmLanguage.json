@@ -357,6 +357,26 @@
 					"match": "\\b(ref)\\b"
 				},
 				{
+					"comment": "array [*,...*] of type",
+					"begin": "\\b(array)\\b",
+					"beginCaptures": {"0": {"name": "keyword.control.array.llama"}},
+					"end": "\\b(of)\\b",
+					"endCaptures": {"0": {"name": "keyword.control.of.llama"}},
+					"contentName": "array.of.llama",
+					"patterns": [
+						{
+							"begin": "(?<=array\\s*)\\[",
+							"end": "\\]",
+							"patterns": [
+								{
+									"name": "star.llama",
+									"match": "\\*"
+								}
+							]
+						}
+					]
+				},
+				{
 					"include": "#idlowertype"
 				},
 				{
@@ -366,14 +386,9 @@
 					"patterns": [{"include": "#type"}]
 				},
 				{
-					"comment": "array [*,...*] of type",
-					"name": "storage.type.llama",
-					"begin": "(?=\\s*array\\s*[\\s*\\*(\\s*,\\s*\\*)*\\s*]\\s*of)",
-					"end": "",
-					"patterns": [{"include": "#type"}]
-				},
-				{
-					"comment": "type -> type"
+					"comment": "type -> type",
+					"name": "keyword.operator.arrow.llama",
+					"match": "\\-\\>"
 				}
 			]
 		},

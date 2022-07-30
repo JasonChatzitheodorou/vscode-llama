@@ -4,7 +4,7 @@ adsf
 (**)
 asdf
 *) 
-not 45 and
+not true && false
 let a = 1
 
 -- simple let tests
@@ -49,12 +49,16 @@ let a =
     in x + 3
 let a = 2 
 
+-- if then else
 let a = if 1 = 1 then 3 else 4
 
 -- After new the parser will prioritize types 
 -- over identifiers until the end of the line
 let a = new (int -> int); 
         a + 1
+
+-- array tests
+let a = new array [*, *, *] of int
 
 -- type tests
 type struct1 = A of int
