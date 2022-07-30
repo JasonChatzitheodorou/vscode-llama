@@ -24,11 +24,11 @@ and c : (* sneaky comment *) ( unit ) = ()
 
 -- let mutable id type tests
 let mutable a : int
-and mutable b : char
+and mutable a : char ref
 let mutable a : (int)
 and mutable a [ 2 ]
-and mutable b : (int)
-and c = 2 
+and mutable a : (int)
+and a = 2 
 
 let rec a (b : int) c = 0
 and a b (c : bool) = 0
@@ -37,6 +37,7 @@ and a b (c : bool) = 0
 let a = for i = 3 to 5 do 1 done
 let a = while true do 1 done
 let a = match 1 with a -> +5 | b -> 1.4 | +. 9.1 -> 8 end 
+let a = match 1 with A 1 2 -> 2 end
 let a = let x = 5 in x  
 
 -- let tests with let in inside
@@ -46,9 +47,14 @@ let a = begin let x = 1 in x end
 let a = 
     let x = 1 
     in x + 3
-let x = 2 
+let a = 2 
 
-let x = if 1 = 1 then 3 else 4
+let a = if 1 = 1 then 3 else 4
+
+-- After new the parser will prioritize types 
+-- over identifiers until the end of the line
+let a = new (int -> int); 
+        a + 1
 
 -- type tests
 type struct1 = A of int

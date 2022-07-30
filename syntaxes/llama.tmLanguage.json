@@ -352,34 +352,28 @@
 					"match": "unit|int|char|bool|float"
 				},
 				{
+					"comment": "type ref",
+					"name": "keyword.control.llama",
+					"match": "\\b(ref)\\b"
+				},
+				{
 					"include": "#idlowertype"
 				},
 				{
 					"comment": "( type )",
 					"begin": "\\(",
 					"end": "\\)",
-					"patterns": [
-						{
-							"include": "#type"
-						}
-					]
+					"patterns": [{"include": "#type"}]
 				},
 				{
 					"comment": "array [*,...*] of type",
 					"name": "storage.type.llama",
 					"begin": "(?=\\s*array\\s*[\\s*\\*(\\s*,\\s*\\*)*\\s*]\\s*of)",
 					"end": "",
-					"patterns": [
-						{
-							"include": "#type"
-						}
-					]
+					"patterns": [{"include": "#type"}]
 				},
 				{
 					"comment": "type -> type"
-				},
-				{
-					"comment": "type ref (can be done properly with first follow, end cannot be just ref"
 				}
 			]
 		},
@@ -494,12 +488,17 @@
 					]
 				},
 				{
-					"name": "keyword.operator.llama",
-					"match": "(new|delete)"
+					"name": "keyword.control.llama",
+					"match": "\\b(delete)\\b"
+				},
+				{
+					"begin": "\\b(new)\\b",
+					"beginCaptures": {"0": {"name": "keyword.new.llama"}},
+					"end": "$",
+					"patterns": [{"include": "#type"}]
 				},
 				{"include": "#idlowervar"},
-				{"include": "#idupper"},
-				{"include": "#type"}
+				{"include": "#idupper"}
 			]
 		},
 		"idlowerdef": 
@@ -541,7 +540,10 @@
 		"idupper":
 		{
 			"patterns": [
-				{"match": "[A-Z]([A-Za-z]|[0-9]|_)*"}
+				{
+					"name": "entity.name.type.llama",
+					"match": "[[:upper:]]([[:alnum:]|_])*"
+				}
 			]
 		},
 		"binop": 
@@ -666,7 +668,8 @@
 					"patterns": [{"include": "#pattern"}]
 				},
 				{
-					"comment": "Constructor pattern"
+					"comment": "Constructor pattern",
+					"include": "#idupper"
 				}
 			]
 		}
